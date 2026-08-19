@@ -10,6 +10,25 @@
 
 `baton` 은 두 판이 있다. 원리는 같고 작동 방식이 다르다 — Claude Code 판은 에이전트가 직접 상태를 실측하고, ChatGPT 판은 사용자가 붙여넣은 것만 사실로 쓴다. 자세한 건 [`baton/gpt/README.md`](baton/gpt/README.md).
 
+## 어디에 올리나 — 목적지를 헷갈리지 마라
+
+같은 스킬이라도 목적지마다 필요한 모양이 다르다. **ChatGPT 용 묶음을 Claude 에 올리면 "유효하지 않은 스킬" 로 거부된다** — `SKILL.md` 가 없기 때문이다. 실제로 한 번 겪었다.
+
+```bash
+scripts/package.sh baton     # dist/ 에 세 개가 만들어진다
+```
+
+| 만들어지는 것 | 어디로 | 어떻게 |
+|---|---|---|
+| `baton-skill.zip` | **Claude** 설정 → Skills | 그대로 업로드 (이걸 먼저) |
+| `baton-skill-flat.zip` | 〃 | 위가 거부되면 이걸로. `SKILL.md` 가 최상위에 있는 형태 |
+| `baton-gpt.zip` | **ChatGPT** 커스텀 GPT | **업로드가 아니다.** 압축을 풀어 `INSTRUCTIONS.md` 는 지침란에 붙여넣고, 나머지만 지식 파일로 올린다 |
+| 저장소 폴더 자체 | **Claude Code** 프로젝트 | 아래 "가져다 쓰기" 참고 |
+
+스크립트는 묶기 전에 `SKILL.md` 를 먼저 검사한다 — frontmatter 모양, `name` 이 폴더명과 같은지, description 길이, BOM, 줄바꿈. 걸리면 zip 을 만들지 않고 이유를 알려준다. 업로더에서 "유효하지 않은 스킬" 만 보고 원인을 못 찾는 상황을 막으려는 것이다.
+
+**`dist/` 는 git 에 올리지 않는다.** 파일이 원본이고 zip 은 만들어 쓰는 것이다. 저장소에 두면 곧 내용과 갈려서, 낡은 zip 을 올리고 왜 안 바뀌냐고 헤매게 된다.
+
 ## 가져다 쓰기
 
 프로젝트의 `.claude/skills/` 아래에 스킬 폴더째 넣으면 그 프로젝트에서 잡힌다.
