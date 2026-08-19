@@ -52,12 +52,13 @@ print('SKILL.md 검사 통과')
 PY
 
 # --- ① Claude 계정 스킬 · 폴더형 -------------------------------------------
+# 업로더가 받는 모양이 이것이다 (2026-08-19 실제 업로드로 확인).
 mkdir -p "$DIST/_work/a"
 cp -r "$SRC" "$DIST/_work/a/$SKILL"
 rm -rf "$DIST/_work/a/$SKILL/gpt"        # 다른 제품용 자료는 뺀다
 ( cd "$DIST/_work/a" && zip -qr "$DIST/$SKILL-skill.zip" "$SKILL" -x '*.DS_Store' '__MACOSX/*' )
 
-# --- ② Claude 계정 스킬 · 평면형 (①이 거부될 때) ---------------------------
+# --- ② Claude 계정 스킬 · 평면형 (예비 — ①이 통과하므로 평소엔 안 쓴다) ----
 mkdir -p "$DIST/_work/b"
 cp -r "$SRC/." "$DIST/_work/b/"
 rm -rf "$DIST/_work/b/gpt"
@@ -75,8 +76,8 @@ rm -rf "$DIST/_work"
 
 echo
 echo "dist/ 에 만들었다 — 목적지를 헷갈리지 마라"
-echo "  $SKILL-skill.zip       → Claude 설정 · Skills 에 업로드 (이걸 먼저)"
-echo "  $SKILL-skill-flat.zip  → 위가 '유효하지 않은 스킬' 이라고 거부되면 이걸로"
+echo "  $SKILL-skill.zip       → Claude 설정 · Skills 에 업로드 (이게 통과하는 모양이다)"
+echo "  $SKILL-skill-flat.zip  → 예비. 위가 거부될 때만 쓴다"
 [ -f "$DIST/$SKILL-gpt.zip" ] && \
 echo "  $SKILL-gpt.zip         → ChatGPT 용. Claude 에 올리면 거부된다 (SKILL.md 가 없다)"
 echo

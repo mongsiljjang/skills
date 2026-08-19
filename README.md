@@ -14,14 +14,16 @@
 
 같은 스킬이라도 목적지마다 필요한 모양이 다르다. **ChatGPT 용 묶음을 Claude 에 올리면 "유효하지 않은 스킬" 로 거부된다** — `SKILL.md` 가 없기 때문이다. 실제로 한 번 겪었다.
 
+Claude 업로더가 받는 모양은 **`스킬이름/SKILL.md` 로 폴더 한 겹이 있는 zip** 이다(2026-08-19 확인). 평면형도 만들어 두지만 예비다.
+
 ```bash
 scripts/package.sh baton     # dist/ 에 세 개가 만들어진다
 ```
 
 | 만들어지는 것 | 어디로 | 어떻게 |
 |---|---|---|
-| `baton-skill.zip` | **Claude** 설정 → Skills | 그대로 업로드 (이걸 먼저) |
-| `baton-skill-flat.zip` | 〃 | 위가 거부되면 이걸로. `SKILL.md` 가 최상위에 있는 형태 |
+| `baton-skill.zip` | **Claude** 설정 → Skills | 그대로 업로드. **2026-08-19 실제로 통과 확인** |
+| `baton-skill-flat.zip` | 〃 | 예비용. `SKILL.md` 가 최상위에 있는 형태 — 지금은 쓸 일이 없다 |
 | `baton-gpt.zip` | **ChatGPT** 커스텀 GPT | **업로드가 아니다.** 압축을 풀어 `INSTRUCTIONS.md` 는 지침란에 붙여넣고, 나머지만 지식 파일로 올린다 |
 | 저장소 폴더 자체 | **Claude Code** 프로젝트 | 아래 "가져다 쓰기" 참고 |
 
