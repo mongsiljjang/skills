@@ -6,7 +6,29 @@
 
 | 스킬 | 하는 일 | 판 |
 |---|---|---|
+| [`mamuri`](mamuri/) (마무리) | **`baton` + `wrap` 을 합친 것.** 하는 일은 같고, 프로젝트마다 다른 관습을 그 프로젝트 문서에서 읽어 따르는 장이 붙었다 | [Claude Code](mamuri/SKILL.md) |
 | [`baton`](baton/) | 세션을 끝내며 다음 세션에 넘긴다. 산출물 상태를 실측하고, 검증을 다시 돌리고, 대화 기록 없이도 다음 세션이 첫 행동을 할 수 있는 핸드오프를 남긴다 | [Claude Code](baton/SKILL.md) · [ChatGPT](baton/gpt/) |
+
+## mamuri 와 baton 중 무엇을 쓰나
+
+**`mamuri` 를 쓴다.** `baton` 은 원본이라 남겨 둔 것이다.
+
+Claude 에 `baton` 과 `wrap` 이 둘 다 깔려 있는데 **둘 다 "랩"·"wrap"·"마무리하자" 에
+반응한다.** 한 프로젝트가 같은 일에 두 이름을 대고 있어서 사람이 헷갈렸다.
+실측해 보니 스냅샷 스크립트는 두 파일이 같았고 `baton` 이 `wrap` 내용을 거의 다
+품고 있었다 — `wrap` 에만 있던 것은 인터페이스 설정, 탐색 깊이 3단계 설명,
+푸시를 안 하면 작업이 고립된다는 한 문장, 셋뿐이었다. 전부 옮겼다.
+
+**이름을 `mamuri` 로 적은 이유** — Claude 업로더가 `name` 에 소문자와 하이픈만
+받는다. 한글 폴더명은 프로젝트 안에서는 잡히지만 업로드에서 거부된다.
+사람에게 보이는 이름은 `마무리` 이고, 설명에 한글 트리거가 다 들어 있어
+"마무리하자"·"랩"·"바통" 무엇으로 불러도 잡힌다.
+
+**프로젝트 이야기는 스킬에 넣지 않는다.** 한 번 넣었다가 되돌렸다 — 저장소가
+몇 개인지, 시험 명령이 무엇인지는 그 프로젝트에서만 참이라 다른 프로젝트에서는
+그대로 거짓말이 된다. 관습은 프로젝트의 `AGENTS.md` 가 들고, 스킬은 1단계에서
+그것을 읽는다. 관습이 안 적혀 있으면 **이번에 알아낸 것을 그 프로젝트 문서에
+적어 두게** 했다. 그래야 프로젝트마다 자기 체크리스트가 쌓이고 스킬은 하나로 남는다.
 
 `baton` 은 두 판이 있다. 원리는 같고 작동 방식이 다르다 — Claude Code 판은 에이전트가 직접 상태를 실측하고, ChatGPT 판은 사용자가 붙여넣은 것만 사실로 쓴다. 자세한 건 [`baton/gpt/README.md`](baton/gpt/README.md).
 
@@ -17,7 +39,8 @@
 Claude 업로더가 받는 모양은 **`스킬이름/SKILL.md` 로 폴더 한 겹이 있는 zip** 이다(2026-08-19 확인). 평면형도 만들어 두지만 예비다.
 
 ```bash
-scripts/package.sh baton     # dist/ 에 세 개가 만들어진다
+scripts/package.sh mamuri    # dist/ 에 두 개가 만들어진다
+scripts/package.sh baton     # dist/ 에 세 개가 만들어진다 (ChatGPT 판 포함)
 ```
 
 | 만들어지는 것 | 어디로 | 어떻게 |
@@ -38,8 +61,8 @@ scripts/package.sh baton     # dist/ 에 세 개가 만들어진다
 ```bash
 # 필요한 스킬 하나만
 git clone --depth 1 https://github.com/mongsiljjang/skills /tmp/skills
-cp -r /tmp/skills/baton <프로젝트>/.claude/skills/
-chmod +x <프로젝트>/.claude/skills/baton/scripts/repo_snapshot.sh
+cp -r /tmp/skills/mamuri <프로젝트>/.claude/skills/
+chmod +x <프로젝트>/.claude/skills/mamuri/scripts/repo_snapshot.sh
 ```
 
 셸 스크립트의 실행 권한(`chmod +x`)이 빠지면 스냅샷 단계가 조용히 실패한다.
