@@ -6,7 +6,7 @@
 
 | 스킬 | 하는 일 | 판 |
 |---|---|---|
-| [`mamuri`](mamuri/) (마무리) | **`baton` + `wrap` 을 합친 것.** 하는 일은 같고, 프로젝트마다 다른 관습을 그 프로젝트 문서에서 읽어 따르는 장이 붙었다 | [Claude Code](mamuri/SKILL.md) |
+| [`mamuri`](mamuri/) (마무리) | **`baton` + `wrap` 을 합친 것.** 하는 일은 같고, 프로젝트마다 다른 관습을 그 프로젝트 문서에서 읽어 따르는 장이 붙었다 | [Claude Code](mamuri/SKILL.md) · [ChatGPT](mamuri/gpt/) · [Gemini](mamuri/gemini/) |
 | [`baton`](baton/) | 세션을 끝내며 다음 세션에 넘긴다. 산출물 상태를 실측하고, 검증을 다시 돌리고, 대화 기록 없이도 다음 세션이 첫 행동을 할 수 있는 핸드오프를 남긴다 | [Claude Code](baton/SKILL.md) · [ChatGPT](baton/gpt/) |
 
 ## mamuri 와 baton 중 무엇을 쓰나
@@ -39,18 +39,23 @@ Claude 에 `baton` 과 `wrap` 이 둘 다 깔려 있는데 **둘 다 "랩"·"wra
 Claude 업로더가 받는 모양은 **`스킬이름/SKILL.md` 로 폴더 한 겹이 있는 zip** 이다(2026-08-19 확인). 평면형도 만들어 두지만 예비다.
 
 ```bash
-scripts/package.sh mamuri    # dist/ 에 두 개가 만들어진다
-scripts/package.sh baton     # dist/ 에 세 개가 만들어진다 (ChatGPT 판 포함)
+scripts/package.sh mamuri    # dist/ 에 네 개가 만들어진다
+scripts/package.sh baton     # dist/ 에 세 개가 만들어진다
 ```
 
 | 만들어지는 것 | 어디로 | 어떻게 |
 |---|---|---|
 | `baton-skill.zip` | **Claude** 설정 → Skills | 그대로 업로드. **2026-08-19 실제로 통과 확인** |
 | `baton-skill-flat.zip` | 〃 | 예비용. `SKILL.md` 가 최상위에 있는 형태 — 지금은 쓸 일이 없다 |
-| `baton-gpt.zip` | **ChatGPT** 커스텀 GPT | **업로드가 아니다.** 압축을 풀어 `INSTRUCTIONS.md` 는 지침란에 붙여넣고, 나머지만 지식 파일로 올린다 |
+| `*-gpt.zip` | **ChatGPT** 커스텀 GPT | **업로드가 아니다.** 압축을 풀어 `INSTRUCTIONS.md` 는 지침란에 붙여넣고, 나머지만 지식 파일로 올린다 |
+| `*-gemini.zip` | **Gemini** | Gem 이면 `INSTRUCTIONS.md` 를 안내란에 붙여넣고 나머지를 지식 파일로. **Gemini CLI 면 `GEMINI.md` 를 프로젝트 뿌리에 넣는다** — CLI 는 직접 실측하므로 붙여넣기가 필요 없다 |
 | 저장소 폴더 자체 | **Claude Code** 프로젝트 | 아래 "가져다 쓰기" 참고 |
 
 스크립트는 묶기 전에 `SKILL.md` 를 먼저 검사한다 — frontmatter 모양, `name` 이 폴더명과 같은지, description 길이, BOM, 줄바꿈. 걸리면 zip 을 만들지 않고 이유를 알려준다. 업로더에서 "유효하지 않은 스킬" 만 보고 원인을 못 찾는 상황을 막으려는 것이다.
+
+스크립트는 묶기 전에 **그 스킬의 묵은 zip 을 먼저 지운다.** `zip` 은 있는 파일에
+덧붙이기 때문에, 안 지우면 지난 판에서 뺀 폴더가 계속 딸려 들어간다.
+2026-08-22 에 `gemini/` 로 실제로 겪었다 — Claude 용 zip 에 Gemini 자료가 섞여 있었다.
 
 **`dist/` 는 git 에 올리지 않는다.** 파일이 원본이고 zip 은 만들어 쓰는 것이다. 저장소에 두면 곧 내용과 갈려서, 낡은 zip 을 올리고 왜 안 바뀌냐고 헤매게 된다.
 

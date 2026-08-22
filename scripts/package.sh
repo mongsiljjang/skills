@@ -52,16 +52,20 @@ print('SKILL.md 검사 통과')
 PY
 
 # --- ① Claude 계정 스킬 · 폴더형 -------------------------------------------
+# zip 은 있는 파일에 덧붙인다. 지우고 시작하지 않으면 지난 판의 파일이 그대로
+# 남아, 뺀 폴더가 계속 딸려 들어간다. 2026-08-22 에 gemini/ 로 실제로 겪었다.
+rm -f "$DIST/$SKILL"-*.zip
+
 # 업로더가 받는 모양이 이것이다 (2026-08-19 실제 업로드로 확인).
 mkdir -p "$DIST/_work/a"
 cp -r "$SRC" "$DIST/_work/a/$SKILL"
-rm -rf "$DIST/_work/a/$SKILL/gpt"        # 다른 제품용 자료는 뺀다
+rm -rf "$DIST/_work/a/$SKILL/gpt" "$DIST/_work/a/$SKILL/gemini"   # 다른 제품용 자료는 뺀다
 ( cd "$DIST/_work/a" && zip -qr "$DIST/$SKILL-skill.zip" "$SKILL" -x '*.DS_Store' '__MACOSX/*' )
 
 # --- ② Claude 계정 스킬 · 평면형 (예비 — ①이 통과하므로 평소엔 안 쓴다) ----
 mkdir -p "$DIST/_work/b"
 cp -r "$SRC/." "$DIST/_work/b/"
-rm -rf "$DIST/_work/b/gpt"
+rm -rf "$DIST/_work/b/gpt" "$DIST/_work/b/gemini"
 ( cd "$DIST/_work/b" && zip -qr "$DIST/$SKILL-skill-flat.zip" . -x '*.DS_Store' '__MACOSX/*' )
 
 # --- ③ ChatGPT 용 (스킬 아님 — 지침 붙여넣기 + 지식 업로드) ----------------
@@ -72,6 +76,15 @@ if [ -d "$SRC/gpt" ]; then
   ( cd "$DIST/_work/c" && zip -qr "$DIST/$SKILL-gpt.zip" . -x '*.DS_Store' '__MACOSX/*' )
 fi
 
+# --- ④ Gemini 용 (스킬 아님 — Gem 안내 붙여넣기 · CLI 는 GEMINI.md) -------
+if [ -d "$SRC/gemini" ]; then
+  mkdir -p "$DIST/_work/d"
+  cp "$SRC/gemini/"*.md "$DIST/_work/d/" 2>/dev/null || true
+  cp "$SRC/references/"*.md "$DIST/_work/d/" 2>/dev/null || true
+  cp "$SRC/gpt/PASTE_COMMANDS.md" "$DIST/_work/d/" 2>/dev/null || true   # Gem 도 붙여넣기가 필요하다
+  ( cd "$DIST/_work/d" && zip -qr "$DIST/$SKILL-gemini.zip" . -x '*.DS_Store' '__MACOSX/*' )
+fi
+
 rm -rf "$DIST/_work"
 
 echo
@@ -80,5 +93,7 @@ echo "  $SKILL-skill.zip       → Claude 설정 · Skills 에 업로드 (이게
 echo "  $SKILL-skill-flat.zip  → 예비. 위가 거부될 때만 쓴다"
 [ -f "$DIST/$SKILL-gpt.zip" ] && \
 echo "  $SKILL-gpt.zip         → ChatGPT 용. Claude 에 올리면 거부된다 (SKILL.md 가 없다)"
+[ -f "$DIST/$SKILL-gemini.zip" ] && \
+echo "  $SKILL-gemini.zip      → Gemini 용. Gem 은 INSTRUCTIONS, CLI 는 GEMINI.md"
 echo
 ls -la "$DIST"/*.zip
